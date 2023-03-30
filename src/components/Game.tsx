@@ -3,6 +3,7 @@ import initializeGamePieces from "../utils/initializeGamePieces";
 import calculateRemainingPieces from "../utils/calculateRemainingPieces";
 import getYXCoords from "../utils/getYXCoords";
 import getPieceColor from "../utils/getPieceColor";
+import GameSidebar from "./GameSidebar";
 import { useState, useEffect } from "react";
 
 export type PieceColor = "BLACK" | "WHITE";
@@ -14,6 +15,10 @@ export type WinActions = {
   whiteDefeat: boolean;
   draw: boolean;
 };
+export type EatenPiecesType = {
+  white: GamePiece[];
+  black: GamePiece[];
+};
 export type RemainingPiecesType = {
   black: number | null;
   white: number | null;
@@ -23,8 +28,10 @@ const Game = () => {
   const [gameBoard, setGameBoard] = useState<GamePiece[][]>([]);
   const [selectedPieceCoords, setSelectedPieceCoords] = useState<number[] | null>(null);
   const [movingPlayer, setMovingPlayer] = useState<PieceColor>("BLACK");
-  const [whiteEatCount, setWhiteEatCount] = useState(0);
-  const [blackEatCount, setBlackEatCount] = useState(0);
+  const [eatenPieces, setEatenPieces] = useState<EatenPiecesType>({
+    white: [],
+    black: [],
+  });
   const [remainingPieces, setRemainingPieces] = useState<RemainingPiecesType>({
     white: null,
     black: null,
@@ -69,6 +76,37 @@ const Game = () => {
     setGameBoard(() => tempBoard);
   };
 
+  const pushEatenPiece = (piece: GamePiece) => {
+    const color = getPieceColor(piece).color;
+
+    let tempPieces = { ...eatenPieces };
+    tempPieces[color === "BLACK" ? "white" : "black"].push(piece);
+
+    setEatenPieces(tempPieces);
+  };
+
+  const handleKingTransforming = (pieceCoords: number[]) => {
+    const kingPositions = {
+      WHITE: 0,
+      BLACK: gameBoard.length - 1,
+    };
+
+    let tempBoard = [...gameBoard];
+    const { y, x } = getYXCoords(pieceCoords);
+    if (y === null || x === null) return;
+
+    const piece = tempBoard[x][y];
+    const pieceColor = getPieceColor(piece).color;
+    if (!pieceColor) return;
+
+    if (kingPositions[pieceColor] === x) {
+      console.log("SET");
+      tempBoard[x][y] = `KING_${pieceColor}`;
+    }
+
+    setGameBoard([...tempBoard]);
+  };
+
   const makeMove = (moveTo: number[]) => {
     if (!selectedPieceCoords) return;
 
@@ -88,26 +126,16 @@ const Game = () => {
     setGameBoard(() => tempBoard);
 
     setMovingPlayer(() => (movingPlayer === "BLACK" ? "WHITE" : "BLACK"));
+    handleKingTransforming([moveTo[0], moveTo[1]]);
   };
 
-  const eatPiece = (pieceToEatCoords: number[], colorEating: PieceColor | null) => {
-    if (!colorEating) return;
-
-    switch (colorEating) {
-      case "BLACK":
-        setBlackEatCount((prevCount) => prevCount + 1);
-        break;
-      case "WHITE":
-        setWhiteEatCount((prevCount) => prevCount + 1);
-      default:
-        break;
-    }
-
+  const eatPiece = (pieceToEatCoords: number[]) => {
     let tempBoard = [...gameBoard];
 
     const { x, y } = getYXCoords(pieceToEatCoords);
     if (x === null || y === null) return;
 
+    pushEatenPiece(tempBoard[y][x]);
     tempBoard[y][x] = "EMPTY";
     makeMove([x, y]);
     calculateRemainingPieces(tempBoard, setRemainingPieces);
@@ -128,7 +156,7 @@ const Game = () => {
     if (pieceToEatColor.color === currentPieceColor.color) {
       setSelectedPieceCoords(pieceCoords);
     } else {
-      eatPiece(pieceCoords, currentPieceColor.color);
+      eatPiece(pieceCoords);
     }
   };
 
@@ -201,30 +229,21 @@ const Game = () => {
   }, [remainingPieces, gameBoard]);
 
   return (
-    <div>
-      <p>Game Board Data</p>
-      <p>
-        Selected Piece coords:{" "}
-        {!selectedPieceCoords
-          ? "No piece selected"
-          : `X: ${selectedPieceCoords[1]} Y: ${selectedPieceCoords[0]}`}
-      </p>
-      <p>
-        White ate: {whiteEatCount} Piece(s), remaining: {remainingPieces.white || "Not calculated"}
-      </p>
-      <p>
-        Black ate: {blackEatCount} Piece(s), remaining: {remainingPieces.black || "Not caulculated"}
-      </p>
-      <p>Player moving: {movingPlayer}</p>
-      <p>Win state: {winState || "Match in progress..."}</p>
-      {winActions.blackDefeat && !winActions.draw && <button>Black surrenders</button>}
-      {winActions.whiteDefeat && !winActions.draw && <button>White surrenders</button>}
-      {winActions.draw && <button>draw</button>}
-      <div className="h-[1px] w-full bg-zinc-400 my-4"></div>
+    <div className="flex flex-wrap justify-center items-start gap-12 px-4">
       <GameBoard
         gameBoard={gameBoard}
         handlePieceClick={handlePieceClick}
         selectedPieceCoords={selectedPieceCoords}
+        eatenPieces={eatenPieces}
+        playerMoving={movingPlayer}
+      />
+      <GameSidebar
+        eatenPieces={eatenPieces}
+        movingPlayer={movingPlayer}
+        remainingPieces={remainingPieces}
+        selectedPieceCoords={selectedPieceCoords}
+        winActions={winActions}
+        winState={winState}
       />
     </div>
   );

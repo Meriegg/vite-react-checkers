@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Alkatra:wght@400;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,18 +14,22 @@
   }
 
   body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @apply bg-zinc-900;
+  }
+
+  * {
+    font-family: "Alkatra", cursive;
+
+    @apply text-white;
   }
 }
 
 @layer components {
   [data-row-filltype="even"] button:nth-child(2n) {
-    background: black;
+    @apply bg-zinc-900;
   }
 
   [data-row-filltype="odd"] button:nth-child(2n - 1) {
-    background: black;
+    @apply bg-zinc-900;
   }
 }
