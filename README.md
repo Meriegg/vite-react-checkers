@@ -7,3 +7,7 @@ to the code if you think you can improve the game!
 # Rules
 
 There are no rules, feel free to play however you like with your friends!
+
+# Where to find project
+
+You can find the project [here](https://playcheckers-game.netlify.app/)
