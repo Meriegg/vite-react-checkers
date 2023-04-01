@@ -4,6 +4,7 @@ import calculateRemainingPieces from "../utils/calculateRemainingPieces";
 import getYXCoords from "../utils/getYXCoords";
 import getPieceColor from "../utils/getPieceColor";
 import GameSidebar from "./GameSidebar";
+import { useSettings } from "../lib/zustand/useSettings";
 import { useState, useEffect } from "react";
 
 export type PieceColor = "BLACK" | "WHITE";
@@ -25,6 +26,7 @@ export type RemainingPiecesType = {
 };
 
 const Game = () => {
+  const { boardHeight, boardWidth, occupyRows } = useSettings((state) => state);
   const [gameBoard, setGameBoard] = useState<GamePiece[][]>([]);
   const [selectedPieceCoords, setSelectedPieceCoords] = useState<number[] | null>(null);
   const [movingPlayer, setMovingPlayer] = useState<PieceColor>("BLACK");
@@ -44,19 +46,14 @@ const Game = () => {
   });
 
   const createGameBoard = () => {
-    // Set the initial board width and height
-    // This will be modifiable in settings
-    const BOARD_WIDTH = 9;
-    const BOARD_HEIGHT = 9;
-
     // Create a temporary board so we don't have to re-render the UI
     // every time we append a new row to the table
     let tempBoard: GamePiece[][] = [];
 
-    for (let i = 0; i < BOARD_HEIGHT; i++) {
+    for (let i = 0; i < boardHeight; i++) {
       const row: GamePiece[] = [];
 
-      for (let j = 0; j < BOARD_WIDTH; j++) {
+      for (let j = 0; j < boardWidth; j++) {
         row.push("EMPTY");
       }
 
@@ -269,6 +266,11 @@ const Game = () => {
   useEffect(() => {
     createGameBoard();
   }, []);
+
+  // After every change in settings reset the board for the changes to take effec
+  useEffect(() => {
+    playAnother();
+  }, [boardHeight, boardWidth, occupyRows]);
 
   // This `useEffect` handles what win action buttons to show based on the game board
   // state
