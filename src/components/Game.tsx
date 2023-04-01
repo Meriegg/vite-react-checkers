@@ -49,30 +49,27 @@ const Game = () => {
     const BOARD_WIDTH = 9;
     const BOARD_HEIGHT = 9;
 
-    // Create a temporary board
+    // Create a temporary board so we don't have to re-render the UI
+    // every time we append a new row to the table
     let tempBoard: GamePiece[][] = [];
 
     for (let i = 0; i < BOARD_HEIGHT; i++) {
       // Create a board row
-      let row: GamePiece[] = [];
+      const row: GamePiece[] = [];
 
       for (let j = 0; j < BOARD_WIDTH; j++) {
-        // Push the required pieces into the row
         row.push("EMPTY");
       }
 
-      // Append the row to the game board
       tempBoard.push(row);
-      // Clear the variable for the next row
-      row = [];
     }
 
+    // Do the board setup on the `tempBoard` variable so that we don't have
+    // to refresh every time a new change is made
     initializeGamePieces(tempBoard);
-
-    // Calculate the total number of pieces
     calculateRemainingPieces(tempBoard, setRemainingPieces);
 
-    // Set the game board
+    // Finally set the gameBoard
     setGameBoard(() => tempBoard);
   };
 
@@ -100,7 +97,6 @@ const Game = () => {
     if (!pieceColor) return;
 
     if (kingPositions[pieceColor] === x) {
-      console.log("SET");
       tempBoard[x][y] = `KING_${pieceColor}`;
     }
 
@@ -158,6 +154,26 @@ const Game = () => {
     } else {
       eatPiece(pieceCoords);
     }
+  };
+
+  const playAnother = () => {
+    setSelectedPieceCoords(null);
+    setMovingPlayer("BLACK");
+    setEatenPieces({
+      black: [],
+      white: [],
+    });
+    setRemainingPieces({
+      black: null,
+      white: null,
+    });
+    setWinState(null);
+    setWinActions({
+      blackDefeat: false,
+      draw: false,
+      whiteDefeat: false,
+    });
+    createGameBoard();
   };
 
   const handlePieceClick = (pieceCoords: number[] | null) => {
@@ -229,7 +245,7 @@ const Game = () => {
   }, [remainingPieces, gameBoard]);
 
   return (
-    <div className="flex flex-wrap justify-center items-start gap-12 px-4">
+    <div className="flex flex-wrap justify-center items-start gap-6 px-4 w-full">
       <GameBoard
         gameBoard={gameBoard}
         handlePieceClick={handlePieceClick}
@@ -244,6 +260,8 @@ const Game = () => {
         selectedPieceCoords={selectedPieceCoords}
         winActions={winActions}
         winState={winState}
+        setWinState={setWinState}
+        playAnother={playAnother}
       />
     </div>
   );

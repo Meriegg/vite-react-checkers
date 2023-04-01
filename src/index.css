@@ -1,5 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Alkatra:wght@400;700&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -18,9 +17,9 @@
   }
 
   * {
-    font-family: "Alkatra", cursive;
+    font-family: "Plus Jakarta Sans", sans-serif;
 
-    @apply text-white;
+    @apply text-white tracking-tight;
   }
 }
 

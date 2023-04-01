@@ -2,7 +2,7 @@ import calculatePopulatedRows from "./calculatePopulatedRows";
 import type { GamePiece, PieceColor } from "../components/Game";
 
 const initializeGamePieces = (tempBoard: GamePiece[][]) => {
-  const ROWS_TO_FILL = 3;
+  const ROWS_TO_FILL = 1;
   const rowIdxs = calculatePopulatedRows(ROWS_TO_FILL, tempBoard)
 
   let rowsToFill: { idx: number; pieceColor: PieceColor }[] = [];
