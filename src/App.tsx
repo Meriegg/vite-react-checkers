@@ -1,10 +1,17 @@
-import Game from "./components/Game";
+import Navbar from "./components/Navbar";
+import GamePage from "./pages/Game";
+import RulesPage from "./pages/Rules";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <div className="flex justify-center items-center mt-12">
-      <Game />
-    </div>
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<GamePage />} />
+        <Route path="/rules" element={<RulesPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

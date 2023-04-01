@@ -58,7 +58,7 @@ const GameSidebar = ({
     <>
       <OptionsModal isOpen={isOptionsModalOpen} setOpen={setOptionsModalOpen} />
       <div
-        className="h-full bg-zinc-800 pt-4 px-4 pb-1 rounded-xl"
+        className="h-full bg-zinc-800 pt-4 px-4 pb-1 rounded-xl mb-8"
         style={{ width: "min(300px, 100%)" }}
       >
         <p className="text-sm text-neutral-300 mb-4">Game Data</p>
