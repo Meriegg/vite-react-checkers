@@ -1,8 +1,13 @@
+/*
+  This function handles the initialization of the black and white pieces on the table,
+  putting black on top and white on bottom.
+*/
+
 import calculatePopulatedRows from "./calculatePopulatedRows";
 import type { GamePiece, PieceColor } from "../components/Game";
 
 const initializeGamePieces = (tempBoard: GamePiece[][]) => {
-  const ROWS_TO_FILL = 1;
+  const ROWS_TO_FILL = 2;
   const rowIdxs = calculatePopulatedRows(ROWS_TO_FILL, tempBoard)
 
   let rowsToFill: { idx: number; pieceColor: PieceColor }[] = [];

@@ -1,3 +1,8 @@
+/*
+  This function calculates the indexes of the rows which need to be populated
+  with pawns. The return value of this function is used in the `initializeGamePieces` function
+*/
+
 import type { GamePiece } from "../components/Game";
 
 const calculatePopulatedRows = (rowsToFill: number, tempBoard: GamePiece[][]) => {
@@ -7,7 +12,7 @@ const calculatePopulatedRows = (rowsToFill: number, tempBoard: GamePiece[][]) =>
 
   let fill = [];
 
-  // calcaulate the first rows
+  // calculate the first rows
   for (let i = 0; i < rowsToFill; i++) {
     fill.push(i)
   };

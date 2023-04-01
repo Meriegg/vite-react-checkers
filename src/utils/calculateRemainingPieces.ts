@@ -1,3 +1,8 @@
+/*
+  This function will calculate how many white and black pieces are left on the table,
+  using the actual table as input
+*/
+
 import getPieceColor from "./getPieceColor";
 import type { GamePiece, RemainingPiecesType } from "../components/Game";
 

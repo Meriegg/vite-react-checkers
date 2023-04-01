@@ -54,7 +54,6 @@ const Game = () => {
     let tempBoard: GamePiece[][] = [];
 
     for (let i = 0; i < BOARD_HEIGHT; i++) {
-      // Create a board row
       const row: GamePiece[] = [];
 
       for (let j = 0; j < BOARD_WIDTH; j++) {
@@ -241,7 +240,7 @@ const Game = () => {
       return;
     }
 
-    // Handle the press behaviour based on the player's previous actions
+    // Handle the press behavior based on the player's previous actions
 
     // If the player doesn't have any selected pieces and wants to select an empty
     // game board piece we can assume they miss clicked because the player can't
@@ -271,10 +270,13 @@ const Game = () => {
     createGameBoard();
   }, []);
 
+  // This `useEffect` handles what win action buttons to show based on the game board
+  // state
   useEffect(() => {
     if (remainingPieces.black === null || remainingPieces.white === null) return;
 
     switch (true || false) {
+      // If both players have 1 piece remaining show a `Draw` button
       case remainingPieces.white === 1 && remainingPieces.black === 1:
         setWinActions((prevActions) => {
           prevActions.draw = true;
@@ -282,9 +284,15 @@ const Game = () => {
           return prevActions;
         });
         break;
+      // If black player has less than 1 piece remaining directly set white as the winner
       case remainingPieces?.black < 1:
         setWinState("WHITE_WON");
         break;
+      // Same goes for white, if they have less than 1 piece set black as the winner
+      case remainingPieces?.white < 1:
+        setWinState("BLACK_WON");
+        break;
+      // If black has 1 piece remaining allow black to surrender
       case remainingPieces.black === 1:
         setWinActions((prevActions) => {
           prevActions.blackDefeat = true;
@@ -292,9 +300,7 @@ const Game = () => {
           return prevActions;
         });
         break;
-      case remainingPieces?.white < 1:
-        setWinState("BLACK_WON");
-        break;
+      // Same for white, if they have 1 piece left allow them to surrender
       case remainingPieces.white === 1:
         setWinActions((prevActions) => {
           prevActions.whiteDefeat = true;
