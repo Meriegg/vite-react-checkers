@@ -127,12 +127,20 @@ const GameSidebar = ({
             : `X: ${selectedPieceCoords[1]} Y: ${selectedPieceCoords[0]}`}
         </p>
       )}
-      <button
-        className="my-2 rounded-lg w-full py-2 bg-zinc-900"
-        onClick={() => setShowDebugInfo(!showDebugInfo)}
-      >
-        {showDebugInfo ? "Hide debug info" : "Show debug info"}
-      </button>
+      <div className="flex flex-col gap-2 my-2">
+        <button
+          className="text-sm rounded-lg px-4 py-2 bg-green-500 w-full"
+          onClick={() => setShowDebugInfo(!showDebugInfo)}
+        >
+          Open Settings
+        </button>
+        <button
+          className="text-sm rounded-lg px-4 py-2 bg-zinc-900"
+          onClick={() => setShowDebugInfo(!showDebugInfo)}
+        >
+          {showDebugInfo ? "Hide debug info" : "Show debug info"}
+        </button>
+      </div>
     </div>
   );
 };
