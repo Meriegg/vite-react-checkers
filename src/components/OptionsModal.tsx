@@ -10,7 +10,7 @@ const OptionsModal = ({ isOpen, setOpen }: Props) => {
   const { boardHeight, boardWidth, occupyRows, setBoardHeight, setBoardOccupyRows, setBoardWidth } =
     useSettings((state) => state);
 
-  const validateNumber = (num: string, { minim }: { minim?: number }) => {
+  const validateNumber = (num: string, { minim }: { minim?: number; max?: number }) => {
     if (Number.isNaN(parseInt(num))) {
       alert("Value must be a number!");
       return false;
@@ -104,6 +104,11 @@ const OptionsModal = ({ isOpen, setOpen }: Props) => {
                   className="py-2 px-4 w-full rounded-md bg-zinc-900 focus:outline-none"
                   onChange={(e) => {
                     if (!validateNumber(e.target.value, { minim: 1 })) {
+                      return;
+                    }
+
+                    if (parseInt(e.target.value) * 2 > boardHeight) {
+                      alert("There must be at least 1 row remaining");
                       return;
                     }
 
